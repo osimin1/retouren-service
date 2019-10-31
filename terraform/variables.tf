@@ -14,15 +14,15 @@ variable "region" {
 }
 
 variable "lambda_payload_filename" {
-  default = "target/retouren-service-0.0.1-SNAPSHOT"
+  default = "target/retouren-service-0.0.1-SNAPSHOT.jar"
 }
 
 variable "lambda_function_handler" {
-  default = "handler.LambdaHandler"
+  default = "de.otto.retouren.controller.RetourenController"
 }
 
 variable "lambda_runtime" {
-  default = "java13"
+  default = "java8"
 }
 
 variable "api_path" {
