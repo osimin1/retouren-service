@@ -7,12 +7,12 @@ resource "aws_dynamodb_table" "retoure-dynamodb-table" {
 
   attribute {
     name = "CustomerId"
-    type = "N"
+    type = "S"
   }
 
   attribute  {
     name = "OrderId"
-    type = "N"
+    type = "S"
   }
 }
 

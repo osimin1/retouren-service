@@ -5,20 +5,50 @@ import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBHashKey;
 import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBRangeKey;
 import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBTable;
 import lombok.Builder;
-import lombok.Data;
 
 import java.util.Date;
 
-@DynamoDBTable(tableName="Retoure")
 @Builder
-@Data
+@DynamoDBTable(tableName = "Retoure")
 public class Retoure {
-    @DynamoDBHashKey(attributeName="CustomerId")
-    private String CustomerID;
-    @DynamoDBRangeKey(attributeName="SongTitle")
+    private String CustomerId;
     private String OrderId;
-    @DynamoDBAttribute(attributeName = "ReturnedShipment")
     private boolean returnedShipment;
-    @DynamoDBAttribute(attributeName = "CreationDate")
     private Date CreationDate;
+
+    @DynamoDBHashKey(attributeName = "CustomerId")
+    public String getCustomerId() {
+        return CustomerId;
+    }
+
+    public void setCustomerId(String customerId) {
+        CustomerId = customerId;
+    }
+
+    @DynamoDBRangeKey(attributeName = "OrderId")
+    public String getOrderId() {
+        return OrderId;
+    }
+
+    public void setOrderId(String orderId) {
+        OrderId = orderId;
+    }
+
+    @DynamoDBAttribute(attributeName = "ReturnedShipment")
+    public boolean isReturnedShipment() {
+        return returnedShipment;
+    }
+
+    public void setReturnedShipment(boolean returnedShipment) {
+        this.returnedShipment = returnedShipment;
+    }
+
+    @DynamoDBAttribute(attributeName = "CreationDate")
+    public Date getCreationDate() {
+        return CreationDate;
+    }
+
+    public void setCreationDate(Date creationDate) {
+        CreationDate = creationDate;
+    }
 }

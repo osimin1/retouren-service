@@ -1,6 +1,6 @@
 // Create a log group for the lambda
 resource "aws_cloudwatch_log_group" "log_group" {
-  name = "/aws/lambda/java_lambda_function"
+  name = "/aws/lambda/retouren_lambda_function"
 }
 
 # allow lambda to log to cloudwatch
