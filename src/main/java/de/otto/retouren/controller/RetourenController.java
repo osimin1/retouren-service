@@ -1,37 +1,40 @@
 package de.otto.retouren.controller;
 
+import com.amazonaws.regions.Regions;
+import com.amazonaws.services.dynamodbv2.AmazonDynamoDB;
+import com.amazonaws.services.dynamodbv2.AmazonDynamoDBClientBuilder;
+import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBMapper;
 import com.amazonaws.services.lambda.runtime.Context;
 import com.amazonaws.services.lambda.runtime.LambdaLogger;
 import com.amazonaws.services.lambda.runtime.RequestHandler;
+import de.otto.retouren.Retoure;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.util.Map;
+import java.util.Date;
 
-public class RetourenController implements RequestHandler<Map<String, Object>, String> {
+public class RetourenController implements RequestHandler<RetoureRequest, RetoureResponse> {
 
     private static String URL = "http://dummy.restapiexample.com/api/v1/retouren";
+    private DynamoDBMapper dynamoDBMapper;
+    private Regions REGION = Regions.EU_CENTRAL_1;
 
-    @Override
-    public String handleRequest(Map<String, Object> inputStream, Context context) {
+    public RetoureResponse handleRequest(RetoureRequest retoureRequest, Context context) {
+        this.initDynamoDbClient();
         LambdaLogger logger = context.getLogger();
-
-        logger.log(inputStream.toString());
-
-        String responseObject;
-        try {
-            responseObject = fetchResponseFromUrl(URL, logger);
-        } catch (IOException e) {
-            logger.log(e.getMessage());
-            responseObject = e.getMessage();
-        }
-        logger.log("sending response");
-        logger.log(responseObject);
-        return responseObject;
+        logger.log(retoureRequest.toString());
+        Retoure retoure = Retoure.builder().CustomerID(retoureRequest.getCustomerID()).OrderId(retoureRequest.getOrderId()).returnedShipment(true).CreationDate(new Date()).build();
+        dynamoDBMapper.save(retoure);
+        String message = String.format("Retoure was saved: %s", retoure.toString());
+        logger.log(message);
+        RetoureResponse retoureResponse = RetoureResponse.builder().message(message).build();
+        logger.log(retoureResponse.toString());
+        return retoureResponse;
     }
+
 
     private String fetchResponseFromUrl(String url, LambdaLogger logger) throws IOException {
         java.net.URL obj = new URL(url);
@@ -60,4 +63,9 @@ public class RetourenController implements RequestHandler<Map<String, Object>, S
         }
     }
 
+    private void initDynamoDbClient() {
+        AmazonDynamoDB client = AmazonDynamoDBClientBuilder.standard().withRegion(REGION).build();
+        dynamoDBMapper = new DynamoDBMapper(client);
+
+    }
 }
