@@ -3,7 +3,9 @@ package de.otto.retouren.controller;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import lombok.Builder;
 
+@Builder
 public class RetourenRequest {
     @Override
     public String toString() {

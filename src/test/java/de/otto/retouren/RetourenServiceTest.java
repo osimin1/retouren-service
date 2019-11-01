@@ -1,7 +1,7 @@
 package de.otto.retouren;
 
 import de.otto.retouren.service.RetourenService;
-import org.junit.jupiter.api.Test;
+import org.junit.Test;
 
 public class RetourenServiceTest {
     RetourenService retourenService = new RetourenService();
