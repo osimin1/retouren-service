@@ -21,6 +21,9 @@ class RetourenControllerTest {
 
     @Test
     public void thatRetoureIsAccepted(){
-       // retoureRequest.handleRequest(RetoureRequest.builder().CustomerID("Hans1").OrderId("order1").build(),context);
+        retoureRequest.handleRequest("{\n" +
+                "  \"CustomerId\":\"Hans1\",\n" +
+                "  \"OrderId\":\"oder1\"\n" +
+                "}",context);
     }
 }

@@ -1,9 +1,9 @@
 package de.otto.retouren.service;
 
-import de.otto.retouren.controller.RetoureRequest;
+import de.otto.retouren.controller.RetourenRequest;
 
 public class RetourenService {
-    public void saveOrder(RetoureRequest retoureRequest) {
+    public void saveOrder(RetourenRequest retourenRequest) {
 
     }
 

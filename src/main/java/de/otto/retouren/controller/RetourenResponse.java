@@ -3,6 +3,6 @@ package de.otto.retouren.controller;
 import lombok.Builder;
 
 @Builder
-public class RetoureResponse {
+public class RetourenResponse {
     private String message;
 }
