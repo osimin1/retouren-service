@@ -23,4 +23,14 @@ public class RetourenRequestTest {
         RetourenRequest req = objectMapper.readerFor(RetourenRequest.class).readValue("{\n \"customerId\": \"c1\",\n \"orderId\": \"o1\"\n}");
         assertThat(req.getCustomerId(), is("c1"));
     }
+
+    @Test(expected = NullPointerException.class)
+    public void thatRetoureWithoutCustomerIdIsNotSaved() {
+          RetourenRequest retourenRequest = RetourenRequest.builder().orderId("order1").build();
+    }
+
+    @Test(expected = NullPointerException.class)
+    public void thatRetoureWithoutOrderIdIsNotSaved() {
+        RetourenRequest retourenRequest = RetourenRequest.builder().customerId("Hans1").build();
+    }
 }

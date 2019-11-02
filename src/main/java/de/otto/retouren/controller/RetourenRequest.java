@@ -7,6 +7,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.NoArgsConstructor;
+import lombok.NonNull;
 
 @Builder
 @AllArgsConstructor
@@ -24,7 +25,9 @@ public class RetourenRequest {
         return "";
     }
 
+    @NonNull
     private String customerId;
+    @NonNull
     private String orderId;
 
     public String getCustomerId() {
