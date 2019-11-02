@@ -1,8 +1,8 @@
 package de.otto.retouren.controller;
 
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.NoArgsConstructor;
@@ -13,8 +13,13 @@ import lombok.NoArgsConstructor;
 public class RetourenRequest {
     @Override
     public String toString() {
-        final Gson gson = new GsonBuilder().setPrettyPrinting().create();
-        return gson.toJson(this);
+        ObjectMapper objectMapper = new ObjectMapper();
+        try {
+            return objectMapper.writer().writeValueAsString(this);
+        } catch (JsonProcessingException e) {
+            e.printStackTrace();
+        }
+        return "";
     }
 
     private String CustomerId;

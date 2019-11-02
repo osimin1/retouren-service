@@ -1,7 +1,6 @@
 package de.otto.retouren.controller;
 
 import com.amazonaws.services.lambda.runtime.Context;
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.Before;
 import org.junit.Test;
@@ -12,8 +11,10 @@ import org.mockito.MockitoAnnotations;
 import org.mockito.Spy;
 import org.mockito.junit.MockitoJUnitRunner;
 
+import java.io.IOException;
+
+import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.is;
 
 @RunWith(MockitoJUnitRunner.class)
 public class RetourenControllerTest {
@@ -49,7 +50,7 @@ public class RetourenControllerTest {
     }
 
     @Test
-    public void testFromString() throws JsonProcessingException {
+    public void testFromString() throws IOException {
         ObjectMapper objectMapper = new ObjectMapper();
         RetourenRequest req = objectMapper.readerFor(RetourenRequest.class).readValue("{\n \"customerId\": \"c1\",\n \"orderId\": \"o1\"\n}");
         assertThat(req.getCustomerId(), is("c1"));
