@@ -3,12 +3,10 @@ package de.otto.retouren.controller;
 import com.amazonaws.services.lambda.runtime.Context;
 import com.amazonaws.services.lambda.runtime.LambdaLogger;
 import de.otto.retouren.service.RetourenService;
-import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
 import org.mockito.Spy;
 import org.mockito.junit.MockitoJUnitRunner;
 
@@ -31,11 +29,6 @@ public class RetourenControllerTest {
     @Mock
     RetourenService retourenService;
 
-    @Before
-    public void setUp() {
-        MockitoAnnotations.initMocks(this);
-    }
-
     @Test
     public void thatRetourenIsEvaluated() {
         // given
@@ -55,7 +48,8 @@ public class RetourenControllerTest {
 
         // then
         verify(retourenService).saveRetoure(retourenRequest);
-        verify(retourenController).callServices(retourenResponse, logger);
+        verify(retourenController).callCustomerCreditNote(logger);
+        verify(retourenController).callVendorChare(logger);
     }
 
 

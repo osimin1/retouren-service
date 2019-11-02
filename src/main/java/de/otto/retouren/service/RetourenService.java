@@ -1,35 +1,29 @@
 package de.otto.retouren.service;
 
-import com.amazonaws.regions.Regions;
-import com.amazonaws.services.dynamodbv2.AmazonDynamoDB;
-import com.amazonaws.services.dynamodbv2.AmazonDynamoDBClientBuilder;
-import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBMapper;
-import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBSaveExpression;
-import com.amazonaws.services.dynamodbv2.model.ConditionalCheckFailedException;
-import com.amazonaws.services.dynamodbv2.model.ExpectedAttributeValue;
 import com.amazonaws.services.lambda.runtime.LambdaLogger;
 import de.otto.retouren.Retoure;
 import de.otto.retouren.controller.RetourenRequest;
 import de.otto.retouren.controller.RetourenResponse;
+import de.otto.retouren.data.RetoureRepo;
 
 import java.util.Date;
-import java.util.HashMap;
 
 public class RetourenService {
 
+    private RetoureRepo retoureRepo;
     private LambdaLogger logger;
-    private DynamoDBMapper dynamoDBMapper;
-    private Regions REGION = Regions.EU_CENTRAL_1;
-    private DynamoDBSaveExpression uniqueOrderIdSaveExpression;
+
 
     public RetourenService(LambdaLogger logger) {
         this.logger = logger;
-        dynamoDBMapper = getDynamoDbClient();
-        uniqueOrderIdSaveExpression = getUniqueOrderIdSaveExpression();
+        retoureRepo = getRetoureRepo();
+    }
+
+    RetoureRepo getRetoureRepo() {
+        return new RetoureRepo();
     }
 
     public RetourenResponse saveRetoure(RetourenRequest retourenRequest) {
-        RetourenResponse retourenResponse;
         Retoure retoure = Retoure.builder()
                 .customerId(retourenRequest.getCustomerId())
                 .orderId(retourenRequest.getOrderId())
@@ -37,34 +31,16 @@ public class RetourenService {
                 .creationDate(new Date())
                 .build();
         String message;
-        try {
-            dynamoDBMapper.save(retoure, uniqueOrderIdSaveExpression);
+        RetourenResponse.Status status = retoureRepo.save(retoure);
+        if (status.equals(RetourenResponse.Status.SAVED)) {
             message = String.format("Retoure was saved: %s", retoure.toString());
-            retourenResponse  = RetourenResponse.builder()
-                    .message(message)
-                    .status(RetourenResponse.Status.SAVED)
-                    .build();
-        } catch (ConditionalCheckFailedException e) {
+        } else {
             message = String.format("Retoure is already known and send: %s", retoure.toString());
-            retourenResponse  = RetourenResponse.builder()
-                    .message(message)
-                    .status(RetourenResponse.Status.IGNORED)
-                    .build();
         }
         logger.log(message);
-        return retourenResponse;
-    }
-
-    DynamoDBSaveExpression getUniqueOrderIdSaveExpression() {
-        DynamoDBSaveExpression saveExpr = new DynamoDBSaveExpression();
-        HashMap<String, ExpectedAttributeValue> expectedCondition = new HashMap<>();
-        expectedCondition.put("OrderId", new ExpectedAttributeValue(false));
-        saveExpr.setExpected(expectedCondition);
-        return saveExpr;
-    }
-
-    DynamoDBMapper getDynamoDbClient() {
-        AmazonDynamoDB client = AmazonDynamoDBClientBuilder.standard().withRegion(REGION).build();
-        return new DynamoDBMapper(client);
+        return RetourenResponse.builder()
+                .message(message)
+                .status(status)
+                .build();
     }
 }
