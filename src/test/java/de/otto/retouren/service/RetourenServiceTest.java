@@ -59,6 +59,7 @@ public class RetourenServiceTest {
         assertThat(retoureArgumentCaptor.getValue().getCustomerId(), is(retourenRequest.getCustomerId()));
         assertThat(retoureArgumentCaptor.getValue().getOrderId(), is(retourenRequest.getOrderId()));
         assertThat(result.getMessage(), containsString("Retoure was saved: Retoure(customerId=Hans1, orderId=1, returnedShipment=true"));
+        assertThat(result.getStatus(),is(RetourenResponse.Status.SAVED));
     }
 
     @Test
@@ -78,6 +79,7 @@ public class RetourenServiceTest {
         assertThat(retoureArgumentCaptor.getValue().getCustomerId(), is(retourenRequest.getCustomerId()));
         assertThat(retoureArgumentCaptor.getValue().getOrderId(), is(retourenRequest.getOrderId()));
         assertThat(result.getMessage(), containsString("Retoure is already known and send: Retoure(customerId=Hans1, orderId=1, returnedShipment=true"));
+        assertThat(result.getStatus(),is(RetourenResponse.Status.IGNORED));
     }
 
 }

@@ -29,6 +29,7 @@ public class RetourenService {
     }
 
     public RetourenResponse saveRetoure(RetourenRequest retourenRequest) {
+        RetourenResponse retourenResponse;
         Retoure retoure = Retoure.builder()
                 .customerId(retourenRequest.getCustomerId())
                 .orderId(retourenRequest.getOrderId())
@@ -39,10 +40,17 @@ public class RetourenService {
         try {
             dynamoDBMapper.save(retoure, uniqueOrderIdSaveExpression);
             message = String.format("Retoure was saved: %s", retoure.toString());
+            retourenResponse  = RetourenResponse.builder()
+                    .message(message)
+                    .status(RetourenResponse.Status.SAVED)
+                    .build();
         } catch (ConditionalCheckFailedException e) {
             message = String.format("Retoure is already known and send: %s", retoure.toString());
+            retourenResponse  = RetourenResponse.builder()
+                    .message(message)
+                    .status(RetourenResponse.Status.IGNORED)
+                    .build();
         }
-        RetourenResponse retourenResponse = RetourenResponse.builder().message(message).build();
         logger.log(message);
         return retourenResponse;
     }

@@ -7,4 +7,12 @@ import lombok.Getter;
 @Getter
 public class RetourenResponse {
     private String message;
+    Status status;
+
+    public enum Status {
+        SAVED,
+        IGNORED,
+        ERROR
+    }
+
 }

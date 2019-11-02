@@ -39,16 +39,23 @@ public class RetourenControllerTest {
     @Test
     public void thatRetourenIsEvaluated() {
         // given
-        doReturn( retourenService )
-                .when( retourenController )
-                .getRetourenService( any( LambdaLogger.class ));
+        doReturn(retourenService)
+                .when(retourenController)
+                .getRetourenService(any(LambdaLogger.class));
+        RetourenResponse retourenResponse = RetourenResponse.builder()
+                .message("saved")
+                .status(RetourenResponse.Status.SAVED)
+                .build();
+        when(retourenService.saveRetoure(any())).thenReturn(retourenResponse);
         when(context.getLogger()).thenReturn(logger);
+
         // when
         RetourenRequest retourenRequest = RetourenRequest.builder().customerId("Hans1").orderId("order1").build();
         retourenController.handleRequest(retourenRequest, context);
 
         // then
         verify(retourenService).saveRetoure(retourenRequest);
+        verify(retourenController).callServices(retourenResponse, logger);
     }
 
 
