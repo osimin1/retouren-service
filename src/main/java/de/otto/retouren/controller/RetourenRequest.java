@@ -24,22 +24,22 @@ public class RetourenRequest {
         return "";
     }
 
-    private String CustomerId;
-    private String OrderId;
+    private String customerId;
+    private String orderId;
 
     public String getCustomerId() {
-        return CustomerId;
+        return customerId;
     }
 
     public void setCustomerId(String customerId) {
-        CustomerId = customerId;
+        this.customerId = customerId;
     }
 
     public String getOrderId() {
-        return OrderId;
+        return orderId;
     }
 
     public void setOrderId(String orderId) {
-        OrderId = orderId;
+        this.orderId = orderId;
     }
 }

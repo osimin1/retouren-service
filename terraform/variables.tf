@@ -16,7 +16,7 @@ variable "lambda_runtime" {
 }
 
 variable "api_path" {
-  default = "retouren"
+  default = "{retouren}"
 }
 
 variable "api_env_stage_name" {
