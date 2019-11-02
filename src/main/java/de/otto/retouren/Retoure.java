@@ -5,33 +5,27 @@ import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBHashKey;
 import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBRangeKey;
 import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBTable;
 import lombok.Builder;
+import lombok.ToString;
 
 import java.util.Date;
 
 @Builder
+@ToString
 @DynamoDBTable(tableName = "Retoure")
 public class Retoure {
-    private String CustomerId;
-    private String OrderId;
+    private String customerId;
+    private String orderId;
     private boolean returnedShipment;
-    private Date CreationDate;
+    private Date creationDate;
 
     @DynamoDBHashKey(attributeName = "CustomerId")
     public String getCustomerId() {
-        return CustomerId;
-    }
-
-    public void setCustomerId(String customerId) {
-        CustomerId = customerId;
+        return customerId;
     }
 
     @DynamoDBRangeKey(attributeName = "OrderId")
     public String getOrderId() {
-        return OrderId;
-    }
-
-    public void setOrderId(String orderId) {
-        OrderId = orderId;
+        return orderId;
     }
 
     @DynamoDBAttribute(attributeName = "ReturnedShipment")
@@ -39,16 +33,9 @@ public class Retoure {
         return returnedShipment;
     }
 
-    public void setReturnedShipment(boolean returnedShipment) {
-        this.returnedShipment = returnedShipment;
-    }
-
     @DynamoDBAttribute(attributeName = "CreationDate")
     public Date getCreationDate() {
-        return CreationDate;
+        return creationDate;
     }
 
-    public void setCreationDate(Date creationDate) {
-        CreationDate = creationDate;
-    }
 }

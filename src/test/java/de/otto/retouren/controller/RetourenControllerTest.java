@@ -1,7 +1,6 @@
 package de.otto.retouren.controller;
 
 import com.amazonaws.services.lambda.runtime.Context;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -10,11 +9,6 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.mockito.Spy;
 import org.mockito.junit.MockitoJUnitRunner;
-
-import java.io.IOException;
-
-import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.MatcherAssert.assertThat;
 
 @RunWith(MockitoJUnitRunner.class)
 public class RetourenControllerTest {
@@ -38,20 +32,5 @@ public class RetourenControllerTest {
                 "  \"CustomerId\":\"Hans1\",\n" +
                 "  \"OrderId\":\"oder1\"\n" +
                 "}",context);*/
-    }
-
-    @Test
-    public void testToString() {
-        RetourenRequest req = new RetourenRequest();
-        req.setCustomerId("c1");
-        req.setOrderId("o1");
-        assertThat(req.toString(), is("{\"customerId\":\"c1\",\"orderId\":\"o1\"}"));
-    }
-
-    @Test
-    public void testFromString() throws IOException {
-        ObjectMapper objectMapper = new ObjectMapper();
-        RetourenRequest req = objectMapper.readerFor(RetourenRequest.class).readValue("{\n \"customerId\": \"c1\",\n \"orderId\": \"o1\"\n}");
-        assertThat(req.getCustomerId(), is("c1"));
     }
 }
