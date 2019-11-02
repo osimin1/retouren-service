@@ -24,7 +24,7 @@ public class RetourenService {
 
     public RetourenService(LambdaLogger logger) {
         this.logger = logger;
-        this.initDynamoDbClient();
+        dynamoDBMapper = getDynamoDbClient();
         uniqueOrderIdSaveExpression = getUniqueOrderIdSaveExpression();
     }
 
@@ -47,7 +47,7 @@ public class RetourenService {
         return retourenResponse;
     }
 
-    private DynamoDBSaveExpression getUniqueOrderIdSaveExpression() {
+    DynamoDBSaveExpression getUniqueOrderIdSaveExpression() {
         DynamoDBSaveExpression saveExpr = new DynamoDBSaveExpression();
         HashMap<String, ExpectedAttributeValue> expectedCondition = new HashMap<>();
         expectedCondition.put("OrderId", new ExpectedAttributeValue(false));
@@ -55,8 +55,8 @@ public class RetourenService {
         return saveExpr;
     }
 
-    private void initDynamoDbClient() {
+    DynamoDBMapper getDynamoDbClient() {
         AmazonDynamoDB client = AmazonDynamoDBClientBuilder.standard().withRegion(REGION).build();
-        dynamoDBMapper = new DynamoDBMapper(client);
+        return new DynamoDBMapper(client);
     }
 }

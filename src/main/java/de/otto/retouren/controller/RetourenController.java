@@ -9,8 +9,12 @@ public class RetourenController implements RequestHandler<RetourenRequest, Retou
 
     public RetourenResponse handleRequest(RetourenRequest retourenRequest, Context context) {
         LambdaLogger logger = context.getLogger();
-        RetourenService retourenService = new RetourenService(logger);
+        RetourenService retourenService = getRetourenService(logger);
         logger.log(retourenRequest.toString());
         return retourenService.saveRetoure(retourenRequest);
+    }
+
+    RetourenService getRetourenService(LambdaLogger logger) {
+        return new RetourenService(logger);
     }
 }
