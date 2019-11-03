@@ -1,8 +1,8 @@
 package de.otto.retouren.service;
 
 import com.amazonaws.services.lambda.runtime.LambdaLogger;
+import de.otto.retouren.Retoure;
 import de.otto.retouren.controller.RetourenRequest;
-import de.otto.retouren.controller.RetourenResponse;
 import de.otto.retouren.data.RetoureRepo;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -11,26 +11,19 @@ import org.mockito.Mock;
 import org.mockito.Spy;
 import org.mockito.junit.MockitoJUnitRunner;
 
-import static org.hamcrest.CoreMatchers.containsString;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
 public class RetourenServiceTest {
 
-    LambdaLogger lambdaLogger = new LambdaLogger() {
-        @Override
-        public void log(String s) {
-
-        }
-
-        @Override
-        public void log(byte[] bytes) {
-
-        }
-    };
+    private static final String CUSTOMER_ID = "Hans1";
+    private static final String ORDER_ID = "1";
+    @Mock
+    LambdaLogger lambdaLogger;
 
     @InjectMocks
     @Spy
@@ -40,31 +33,62 @@ public class RetourenServiceTest {
     RetoureRepo retoureRepo;
 
     @Test
-    public void thatUnknownRetoureHasCorrectResponse() {
+    public void thatUnknownRetoureIsSaved() {
         // given
-        RetourenRequest retourenRequest = RetourenRequest.builder().customerId("Hans1").orderId("1").build();
-        when(retoureRepo.save(any())).thenReturn(RetourenResponse.Status.SAVED);
+        RetourenRequest retourenRequest = RetourenRequest.builder().customerId(CUSTOMER_ID).orderId(ORDER_ID).build();
+        when(retoureRepo.save(any())).thenReturn(true);
 
         //when
-        RetourenResponse result = retourenService.saveRetoure(retourenRequest);
+        boolean result = retourenService.isSaveRetoureSuccessful(retourenRequest);
 
         //then
-        assertThat(result.getMessage(), containsString("Retoure was saved: Retoure(customerId=Hans1, orderId=1, returnedShipment=true"));
-        assertThat(result.getStatus(),is(RetourenResponse.Status.SAVED));
+        assertThat(result, is(true));
     }
 
     @Test
-    public void thatKnownRetoureHasCorrectResponse() {
+    public void thatKnownRetoureIsNOTSaved()
+    {
         // given
-        RetourenRequest retourenRequest = RetourenRequest.builder().customerId("Hans1").orderId("1").build();
-        when(retoureRepo.save(any())).thenReturn(RetourenResponse.Status.IGNORED);
+        RetourenRequest retourenRequest = RetourenRequest.builder().customerId(CUSTOMER_ID).orderId(ORDER_ID).build();
+        when(retoureRepo.save(any())).thenReturn(false);
 
         //when
-        RetourenResponse result = retourenService.saveRetoure(retourenRequest);
+        boolean result = retourenService.isSaveRetoureSuccessful(retourenRequest);
 
         //then
-        assertThat(result.getMessage(), containsString("Retoure is already known and send: Retoure(customerId=Hans1, orderId=1, returnedShipment=true"));
-        assertThat(result.getStatus(),is(RetourenResponse.Status.IGNORED));
+        assertThat(result, is(false));
+    }
+
+    @Test
+    public void thatDuplicateIsFound()
+    {
+        // given
+        RetourenRequest retourenRequest = RetourenRequest.builder().customerId(CUSTOMER_ID).orderId(ORDER_ID).build();
+        Retoure retoure= Retoure.builder().customerId(CUSTOMER_ID).orderId(ORDER_ID).build();
+        doReturn(retoure).
+                when(retoureRepo).loadRetoure(CUSTOMER_ID, ORDER_ID);
+
+        //when
+        boolean result = retourenService.isDuplicateRetoure(retourenRequest);
+
+        //then
+        assertThat(result, is(true));
+    }
+
+    @Test
+    public void thatDuplicateIsNOTFound()
+    {
+        // given
+        RetourenRequest retourenRequest = RetourenRequest.builder().customerId(CUSTOMER_ID).orderId(ORDER_ID).build();
+        Retoure retoure= Retoure.builder().customerId(CUSTOMER_ID).orderId(ORDER_ID).build();
+        doReturn(null).
+                when(retoureRepo).loadRetoure(CUSTOMER_ID, ORDER_ID);
+
+        //when
+        boolean result = retourenService.isDuplicateRetoure(retourenRequest);
+
+        //then
+        assertThat(result, is(false));
     }
 
 }

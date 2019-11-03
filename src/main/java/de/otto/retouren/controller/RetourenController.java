@@ -16,15 +16,25 @@ public class RetourenController implements RequestHandler<RetourenRequest, Retou
 
     public RetourenResponse handleRequest(RetourenRequest retourenRequest, Context context) {
         LambdaLogger logger = context.getLogger();
-        RetourenService retourenService = getRetourenService(logger);
         logger.log(retourenRequest.toString());
+        return getRetourenResponse(retourenRequest, logger);
+    }
+
+    private RetourenResponse getRetourenResponse(RetourenRequest retourenRequest, LambdaLogger logger) {
+        RetourenService retourenService = getRetourenService(logger);
+        if (retourenService.isDuplicateRetoure(retourenRequest)) {
+            return RetourenResponse.builder().message("Duplicate Retoure detected").status(RetourenResponse.Status.DUBLICATE).build();
+        }
         if (callCustomerCreditNote(logger) != 200) {
-            return RetourenResponse.builder().message("Kundengutschriften-Service konnte nicht erfolgreich aufgerufen werden").status(RetourenResponse.Status.ERROR).build();
+            return RetourenResponse.builder().message("CustomerCreditNote-Service call was not successful").status(RetourenResponse.Status.ERROR).build();
         }
-        if (callVendorChare(logger) != 200) {
-            return RetourenResponse.builder().message("Lieferantenbelastungen-Service konnte nicht erfolgreich aufgerufen werden").status(RetourenResponse.Status.ERROR).build();
+        if (callVendorCharge(logger) != 200) {
+            return RetourenResponse.builder().message("VendorCharge-Service call was not successful").status(RetourenResponse.Status.ERROR).build();
         }
-        return retourenService.saveRetoure(retourenRequest);
+        if (retourenService.isSaveRetoureSuccessful(retourenRequest)) {
+            return RetourenResponse.builder().message("Retoure was saved successful").status(RetourenResponse.Status.SAVED).build();
+        }
+        return RetourenResponse.builder().message("Retoure was NOT saved").status(RetourenResponse.Status.ERROR).build();
     }
 
     int callCustomerCreditNote(LambdaLogger logger) {
@@ -36,7 +46,7 @@ public class RetourenController implements RequestHandler<RetourenRequest, Retou
         }
     }
 
-    int callVendorChare(LambdaLogger logger) {
+    int callVendorCharge(LambdaLogger logger) {
         try {
             /*           return call(KUNDENGUTSCHRIFTENURL,logger);*/
             return 200;

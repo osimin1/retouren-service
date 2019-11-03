@@ -4,15 +4,16 @@ import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBAttribute;
 import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBHashKey;
 import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBRangeKey;
 import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBTable;
-import lombok.Builder;
-import lombok.NonNull;
-import lombok.ToString;
+import lombok.*;
 
 import java.util.Date;
 
 @Builder
 @ToString
+@AllArgsConstructor
+@NoArgsConstructor
 @DynamoDBTable(tableName = "Retoure")
+@Setter
 public class Retoure {
     @NonNull
     private String customerId;

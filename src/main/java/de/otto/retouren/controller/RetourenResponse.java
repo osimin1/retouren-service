@@ -5,13 +5,13 @@ import lombok.Getter;
 
 @Builder
 @Getter
-public class RetourenResponse {
+class RetourenResponse {
     private String message;
     Status status;
 
     public enum Status {
         SAVED,
-        IGNORED,
+        DUBLICATE,
         ERROR
     }
 
