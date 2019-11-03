@@ -32,9 +32,6 @@ resource "aws_iam_policy" "iam_policy_for_lambda" {
         "Effect": "Allow",
         "Action": [
           "cloudwatch:PutMetricData",
-          "ec2:DescribeNetworkInterfaces",
-          "ec2:CreateNetworkInterface",
-          "ec2:DeleteNetworkInterface",
           "logs:CreateLogStream",
           "logs:PutLogEvents",
           "xray:PutTelemetryRecords",
