@@ -4,15 +4,13 @@ package de.otto.retouren.controller;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.NoArgsConstructor;
-import lombok.NonNull;
+import lombok.*;
 
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
 @JsonPropertyOrder(alphabetic = true)
+@Setter
 public class RetourenRequest {
     @Override
     public String toString() {

@@ -11,7 +11,7 @@ class RetourenResponse {
 
     public enum Status {
         SAVED,
-        DUBLICATE,
+        DUPLICATE,
         ERROR
     }
 

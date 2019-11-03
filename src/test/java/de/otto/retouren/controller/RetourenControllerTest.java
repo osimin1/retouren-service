@@ -71,7 +71,7 @@ public class RetourenControllerTest {
         verify(retourenService, never()).isSaveRetoureSuccessful(retourenRequest);
         verify(retourenController,never()).callCustomerCreditNote(logger);
         verify(retourenController,never()).callVendorCharge(logger);
-        assertThat(result.getStatus(), is(RetourenResponse.Status.DUBLICATE));
+        assertThat(result.getStatus(), is(RetourenResponse.Status.DUPLICATE));
         assertThat(result.getMessage(), containsString("Duplicate Retoure detected"));
     }
 

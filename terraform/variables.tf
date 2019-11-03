@@ -20,5 +20,5 @@ variable "api_path" {
 }
 
 variable "api_env_stage_name" {
-  default = "terraform-lambda-java-stage"
+  default = "retouren-lambda-java-stage"
 }

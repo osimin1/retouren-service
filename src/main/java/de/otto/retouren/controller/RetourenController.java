@@ -23,7 +23,7 @@ public class RetourenController implements RequestHandler<RetourenRequest, Retou
     private RetourenResponse getRetourenResponse(RetourenRequest retourenRequest, LambdaLogger logger) {
         RetourenService retourenService = getRetourenService(logger);
         if (retourenService.isDuplicateRetoure(retourenRequest)) {
-            return RetourenResponse.builder().message("Duplicate Retoure detected").status(RetourenResponse.Status.DUBLICATE).build();
+            return RetourenResponse.builder().message("Duplicate Retoure detected").status(RetourenResponse.Status.DUPLICATE).build();
         }
         if (callCustomerCreditNote(logger) != 200) {
             return RetourenResponse.builder().message("CustomerCreditNote-Service call was not successful").status(RetourenResponse.Status.ERROR).build();
